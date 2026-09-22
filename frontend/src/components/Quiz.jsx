@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "../quiz.css";
 
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
 function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -30,9 +33,9 @@ function Quiz() {
       setScore(0);
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/generate-quiz?filename=${encodeURIComponent(
-          filename
-        )}&number_of_questions=5`,
+  `${API_URL}/api/generate-quiz?filename=${encodeURIComponent(
+    filename
+  )}&number_of_questions=5`,
         {
           method: "POST",
         }

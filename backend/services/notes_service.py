@@ -83,13 +83,20 @@ def is_quota_error(error):
     message = str(error).lower()
 
     return (
+        # Gemini quota / rate-limit errors
         "429" in message
         or "resource_exhausted" in message
         or "resource exhausted" in message
         or "quota exceeded" in message
         or "generaterequestsperdayperproject-freetier" in message
-    )
 
+        # Gemini temporary availability errors
+        or "503" in message
+        or "unavailable" in message
+        or "high demand" in message
+        or "temporarily unavailable" in message
+        or "overloaded" in message
+    )
 
 # =========================================================
 # LOCAL FALLBACK NOTES

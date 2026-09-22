@@ -112,24 +112,21 @@ app = FastAPI(
 # CORS
 # ============================================================
 
+# ============================================================
+# CORS
+# ============================================================
+
+# ============================================================
+# CORS
+# ============================================================
+
 app.add_middleware(
     CORSMiddleware,
-
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-    ],
-
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
-
     allow_methods=["*"],
-
     allow_headers=["*"],
 )
-
 
 # ============================================================
 # ROUTERS
@@ -2658,12 +2655,72 @@ Correct Answer:
 
     except HTTPException:
         raise
+
     except Exception as error:
-        print("❌ Explain-to-Learn Gemini Error:", error)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Explain-to-Learn failed: {error}"
+        print("? Explain-to-Learn Gemini Error:", error)
+        print("?? Using local Explain-to-Learn fallback...")
+
+        student = student_answer if student_answer else "No answer provided"
+
+        if student.lower().strip() == correct_answer.lower().strip():
+            why_student_wrong = (
+                "Your answer matches the correct answer. "
+                "You appear to understand the main idea."
+            )
+        else:
+            why_student_wrong = (
+                f"Your answer was: {student}. "
+                f"The expected answer is: {correct_answer}. "
+                "Review the difference between your answer and the correct answer."
+            )
+
+        explanation = (
+            f"Let's understand {topic} step by step. "
+            f"The correct answer is {correct_answer}. "
+            f"The key idea is to connect the question with the concept "
+            f"being tested: {question}."
         )
+
+        example = (
+            f"For example, when studying {topic}, identify the main concept "
+            "in the question and compare it with the definition or rule "
+            "that leads to the correct answer."
+        )
+
+        memory_tip = (
+            f"Memory tip: Remember the key idea behind {correct_answer}, "
+            "rather than memorizing only the answer."
+        )
+
+        next_step = (
+            f"Review {topic} once more and try answering the question "
+            "again without looking at the answer."
+        )
+
+        practice_question = (
+            f"Explain in your own words why '{correct_answer}' "
+            "is the correct answer."
+        )
+
+        print("? Local Explain-to-Learn fallback generated.")
+        print("=" * 60)
+
+        return {
+            "success": True,
+            "question": question,
+            "topic": topic,
+            "student_answer": student_answer,
+            "correct_answer": correct_answer,
+            "why_student_wrong": why_student_wrong,
+            "explanation": explanation,
+            "example": example,
+            "memory_tip": memory_tip,
+            "next_step": next_step,
+            "practice_question": practice_question,
+            "provider": "Local Fallback",
+            "model": "Local Explain-to-Learn",
+            "analysis_type": "Explain-to-Learn AI"
+        }
 
 
 # ============================================================

@@ -90,21 +90,63 @@ def init_database():
     # LEARNING PROGRESS TABLE
     # ========================================================
 
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS quiz_history (
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS learning_progress (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
             user_id INTEGER NOT NULL,
-            quiz_title TEXT DEFAULT 'Generated Quiz',
-            topic TEXT DEFAULT 'General',
+
+            topic TEXT NOT NULL,
+
             score INTEGER DEFAULT 0,
-            total_questions INTEGER DEFAULT 0,
-            percentage REAL DEFAULT 0,
-            result TEXT DEFAULT 'Completed',
-            completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY(user_id) REFERENCES users(id)
+
+            completed INTEGER DEFAULT 0,
+
+            updated_at TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY(user_id)
+                REFERENCES users(id),
+
+            UNIQUE(user_id, topic)
         )
     """)
-    
+
+    # ========================================================
+    # QUIZ HISTORY TABLE
+    # ========================================================
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS quiz_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            quiz_title TEXT
+                DEFAULT 'Generated Quiz',
+
+            topic TEXT
+                DEFAULT 'General',
+
+            score INTEGER
+                DEFAULT 0,
+
+            total_questions INTEGER
+                DEFAULT 0,
+
+            percentage REAL
+                DEFAULT 0,
+
+            result TEXT
+                DEFAULT 'Completed',
+
+            completed_at TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY(user_id)
+                REFERENCES users(id)
+        )
+    """)
     
     
     

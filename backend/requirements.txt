@@ -6,3 +6,4 @@ google-genai
 python-dotenv
 PyJWT
 pwdlib[argon2]
+bcrypt
